@@ -3,7 +3,7 @@
 <br/>
 <h3>Requirements</h3>
 <p>Third party Python Libraries</p>
-<p> -> asyncio</p>
-<p> -> websockets</p>
-<p> -> requests</p>
+<span> -> asyncio</span>
+<span> -> websockets</span>
+<span> -> requests</span>
 <br/>
