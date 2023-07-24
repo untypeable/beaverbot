@@ -1,0 +1,2 @@
+# beaverbot
+Light discord bot
