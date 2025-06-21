@@ -17,12 +17,18 @@ class BeaverBot:
         self.running: bool = False
         self.whitelist: any = [FISHPOND,BOT_TESTING]
         self.sequence: int = 0
+        self.heartbeat: asyncio.Task = None
     
     async def connect(self):
         self.client = await websockets.connect("wss://gateway.discord.gg/?v=10&encoding=json", max_size=5_000_000)
         await self.client.send(wsconfig.WS_HELLO)
         self.running = True
-        asyncio.create_task(self.heartbeat_loop())
+        self.heartbeat = asyncio.create_task(self.heartbeat_loop())
+    
+    async def reconnect(self):
+        self.heartbeat.cancel()
+        await self.client.close()
+        await self.connect()
     
     async def send_heartbeat(self):
         wsconfig.ws_sequence(self.sequence)
@@ -50,6 +56,10 @@ class BeaverBot:
                 match op:
                     case 1:
                         self.send_heartbeat()
+                    case 7:
+                        await self.reconnect()
+                    case 9:
+                        await self.reconnect()
                     case 10:
                         self.interval = d["heartbeat_interval"] / 1000
                 
