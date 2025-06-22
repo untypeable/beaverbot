@@ -10,6 +10,15 @@ import wsconfig
 FISHPOND = "592887581402988563"
 BOT_TESTING = "886339210360021072"
 
+BEAVERS = [
+    "https://tenor.com/view/beaver-beaver-walk-beaver-hug-gif-3230734869832725232",
+    "https://tenor.com/view/beaver-hi-gif-21291049",
+    "https://tenor.com/view/beaver-carrot-eating-gif-21665554",
+    "https://tenor.com/view/beaver-carrying-hurry-%D0%B1%D0%BE%D0%B1%D0%B5%D1%80-carrots-gif-25255221",
+    "https://tenor.com/view/look-anyway-eating-chewing-beaver-gif-11989160466131802631",
+    "https://tenor.com/view/groundhog-groundhog-eating-wait-gif-3478318557675834878"
+]
+
 class BeaverBot:
     def __init__(self):
         self.client: websockets.ClientConnection = None
@@ -64,10 +73,14 @@ class BeaverBot:
                         self.interval = d["heartbeat_interval"] / 1000
                 
                 if s: self.sequence = s
+
+                if "author" in d and d["author"]["id"] == "1385049954816495686":
+                    continue
                 
                 if t == "MESSAGE_CREATE":
                     if d["guild_id"] not in self.whitelist: continue
                     self.handle_message(d)
+                    print(d["author"]["id"])
 
             except Exception as ex:
                 print(message)
@@ -77,11 +90,11 @@ class BeaverBot:
     def handle_message(self, data: any):
         content: str = data["content"]
         if content.startswith("!bb"):
-            wsconfig.http_reply(data, "https://tenor.com/view/beaver-hi-gif-21291049")
+            wsconfig.http_reply(data, random.choice(BEAVERS))
             return
         rand: int = random.randint(0, 30)
         if rand == 15:
-            wsconfig.http_reply(data, "https://tenor.com/view/beaver-hi-gif-21291049")
+            wsconfig.http_reply(data, random.choice(BEAVERS))
 
 async def main():
     bot = BeaverBot()
