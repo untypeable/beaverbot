@@ -73,11 +73,11 @@ class BeaverBot:
                         self.interval = d["heartbeat_interval"] / 1000
                 
                 if s: self.sequence = s
-
-                if "author" in d and d["author"]["id"] == "1385049954816495686":
-                    continue
                 
                 if t == "MESSAGE_CREATE":
+                    author = d.get("author")
+                    if author and author.get("id") == "1385049954816495686":
+                        continue
                     if d["guild_id"] not in self.whitelist: continue
                     self.handle_message(d)
                     print(d["author"]["id"])
